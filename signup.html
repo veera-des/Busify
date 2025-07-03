@@ -3,92 +3,53 @@
 <head>
   <meta charset="UTF-8" />
   <title>Signup ‑ BUSIFY</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
   <style>
-    body {
-      background: linear-gradient(135deg, #1f1f2e, #2c2c47);
-      font-family: 'Poppins', sans-serif;
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
+    /* ────── PAGE BASE ────── */
+    body{
+      background:linear-gradient(135deg,#1f1f2e,#2c2c47);
+      font-family:'Poppins',sans-serif;
+      color:#fff;display:flex;flex-direction:column;
+      align-items:center;justify-content:center;height:100vh;
+    }
+    .logo{text-align:center;margin-bottom:20px}
+    .logo img{height:60px}
+    .logo h1{
+      background:linear-gradient(to right,#00c6ff,#007bff);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+      font-size:2.5rem;margin-top:.5rem;
+    }
+    .form{
+      background:rgba(255,255,255,.05);
+      padding:2rem;border-radius:12px;width:300px;
+      box-shadow:0 0 20px rgba(0,0,0,.4);
     }
 
-    .logo {
-      text-align: center;
-      margin-bottom: 20px;
+    /* ────── INPUTS & BUTTON ────── */
+    input,select,button{
+      width:100%;margin-top:1rem;padding:.75rem;
+      border-radius:8px;border:none;font-size:1rem;
     }
+    input{background:rgba(255,255,255,.1);color:#fff;}
+    button{
+      background:#00c6ff;color:#fff;font-weight:bold;cursor:pointer;
+      transition:background.25s;
+    }
+    button:hover{background:#007bff;}
 
-    .logo img {
-      height: 60px;
+    /* ────── CUSTOM SELECT (fix blue bar) ────── */
+    select{
+      background:#2c2c47;color:#fff;border:2px solid #007bff;
+      appearance:none;-webkit-appearance:none;-moz-appearance:none;
+      background-image:url("data:image/svg+xml;utf8,<svg fill='white' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M4 6l4 4 4-4z'/></svg>");
+      background-repeat:no-repeat;background-position:right 12px center;
+      background-size:12px;
     }
-
-    .logo h1 {
-      background: linear-gradient(to right, #00c6ff, #007bff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      font-size: 2.5rem;
-      margin-top: 0.5rem;
+    select:focus{
+      outline:none;border-color:#00c6ff;
+      box-shadow:0 0 4px rgba(0,123,255,.6);
     }
-
-    .form {
-      background: rgba(255, 255, 255, 0.05);
-      padding: 2rem;
-      border-radius: 12px;
-      width: 300px;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
-    }
-
-    input, select, button {
-      width: 100%;
-      margin-top: 1rem;
-      padding: 0.75rem;
-      border-radius: 8px;
-      border: none;
-      font-size: 1rem;
-    }
-
-    input {
-      background: rgba(255, 255, 255, 0.1);
-      color: #fff;
-    }
-
-    button {
-      background: #00c6ff;
-      color: #fff;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.25s;
-    }
-
-    button:hover {
-      background: #007bff;
-    }
-
-    select {
-      background: #2c2c47;
-      color: #fff;
-      border: 2px solid #007bff;
-      appearance: none;
-      background-image: url("data:image/svg+xml;utf8,<svg fill='white' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M4 6l4 4 4-4z'/></svg>");
-      background-repeat: no-repeat;
-      background-position: right 12px center;
-      background-size: 12px;
-    }
-
-    select:focus {
-      outline: none;
-      border-color: #00c6ff;
-      box-shadow: 0 0 4px rgba(0, 123, 255, 0.6);
-    }
-
-    select option {
-      background: #fff;
-      color: #000;
-    }
+    select option{background:#fff;color:#000;}
   </style>
 </head>
 <body>
@@ -99,8 +60,8 @@
 
   <div class="form">
     <h2>Signup</h2>
-    <input type="text" id="name" placeholder="Full Name" />
-    <input type="email" id="email" placeholder="Email" />
+    <input type="text" id="name"     placeholder="Full Name" />
+    <input type="email" id="email"    placeholder="Email" />
     <input type="password" id="password" placeholder="Password" />
     <select id="role">
       <option value="">Select Role</option>
@@ -110,33 +71,31 @@
     <button onclick="signup()">Register</button>
   </div>
 
-  <script>
-    function signup() {
-      const name = document.getElementById("name").value.trim();
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value.trim();
-      const role = document.getElementById("role").value;
+<script>
+function signup() {
+  const name = document.getElementById("name").value.trim();
+  const email = document.getElementById("email").value.trim().toLowerCase();
+  const password = document.getElementById("password").value.trim();
+  const role = document.getElementById("role").value;
 
-      if (!name || !email || !password || !role) {
-        alert("Please fill all fields, including role.");
-        return;
-      }
+  if (!name || !email || !password || !role) {
+    alert("Please fill all fields.");
+    return;
+  }
 
-      let users = JSON.parse(localStorage.getItem("busifyUsers") || "[]");
+  const users = JSON.parse(localStorage.getItem("busify_users") || "[]");
+  if (users.some(u => u.email === email)) {
+    alert("Email already registered.");
+    return;
+  }
 
-      // Check if email already exists
-      const exists = users.some(u => u.email === email);
-      if (exists) {
-        alert("User with this email already exists.");
-        return;
-      }
+  const newUser = { name, email, password, role };
+  users.push(newUser);
+  localStorage.setItem("busify_users", JSON.stringify(users));
 
-      users.push({ name, email, password, role });
-      localStorage.setItem("busifyUsers", JSON.stringify(users));
-
-      alert("Signup successful!");
-      window.location.href = "login.html";
-    }
-  </script>
+  alert("Signup successful! Please login.");
+  window.location.href = "login.html";
+}
+</script>
 </body>
 </html>
