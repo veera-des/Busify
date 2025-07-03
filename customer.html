@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Customer - BUSIFY</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      margin: 0;
+      padding: 2rem;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #1f1f2e, #2c2c47);
+      color: white;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .brand img {
+      height: 60px;
+    }
+    .brand-title {
+      font-size: 2.5rem;
+      font-weight: bold;
+      background: -webkit-linear-gradient(135deg, #00c6ff, #007bff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .form-section {
+      max-width: 720px;
+      margin: 2rem auto;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 2rem;
+      border-radius: 1.2rem;
+      box-shadow: 0 0 20px rgba(0,0,0,0.4);
+    }
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #00c6ff;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid #333;
+      padding-bottom: 0.5rem;
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      margin-bottom: 0.25rem;
+    }
+    select, input {
+      width: 100%;
+      padding: 0.7rem;
+      border-radius: 0.5rem;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid #555;
+      color: white;
+      font-size: 1rem;
+    }
+    select, option {
+      background-color: #2c2c47;
+      color: white;
+    }
+    button {
+      display: inline-block;
+      background: #00c6ff;
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      font-size: 1rem;
+      margin-top: 1rem;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #007bff;
+    }
+    table {
+      width: 100%;
+      margin-top: 1rem;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid #444;
+    }
+    .seat-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin: 1rem 0;
+    }
+    .seat {
+      background: #333;
+      padding: 0.7rem;
+      text-align: center;
+      border-radius: 6px;
+      cursor: pointer;
+      border: 1px solid #666;
+    }
+    .seat.selected {
+      background: #00c6ff;
+      color: black;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="brand">
+    <img src="logo (4).png" alt="BUSIFY Logo">
+    <span class="brand-title">BUSIFY</span>
+  </div>
+
+  <h2>Welcome, Customer</h2>
+
+  <!-- Search Form -->
+  <section class="form-section">
+    <div class="section-title">Search Buses</div>
+    <label>From City</label>
+<select id="fromCity">
+  <option value="">Select</option>
+  <option>Chennai</option><option>Coimbatore</option><option>Madurai</option><option>Trichy</option>
+  <option>Salem</option><option>Tirunelveli</option><option>Erode</option><option>Vellore</option>
+  <option>Thanjavur</option><option>Nagercoil</option><option>Dindigul</option><option>Cuddalore</option>
+  <option>Thoothukudi</option><option>Kanchipuram</option><option>Karur</option><option>Villupuram</option>
+  <option>Hosur</option><option>Ranipet</option><option>Namakkal</option>
+</select>
+    <label>To City</label>
+<select id="toCity">
+  <option value="">Select</option>
+  <option>Chennai</option><option>Coimbatore</option><option>Madurai</option><option>Trichy</option>
+  <option>Salem</option><option>Tirunelveli</option><option>Erode</option><option>Vellore</option>
+  <option>Thanjavur</option><option>Nagercoil</option><option>Dindigul</option><option>Cuddalore</option>
+  <option>Thoothukudi</option><option>Kanchipuram</option><option>Karur</option><option>Villupuram</option>
+  <option>Hosur</option><option>Ranipet</option><option>Namakkal</option>
+</select>
+    <label>Travel Date</label>
+    <input type="date" id="travelDate" />
+    <button onclick="showBuses()">View Available Buses</button>
+  </section>
+
+  <!-- Bus List -->
+  <section class="form-section hidden" id="busSection">
+    <div class="section-title">Available Buses</div>
+    <table>
+      <thead>
+        <tr><th>Operator</th><th>Time</th><th>Fare</th><th>Seats</th><th>Action</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <!-- Seat Selection -->
+  <section class="form-section hidden" id="seatSection">
+    <div class="section-title">Choose Your Seat(s)</div>
+    <div class="seat-grid" id="seatGrid"></div>
+    <input type="text" id="selectedSeats" placeholder="Selected Seat Nos" readonly />
+  </section>
+
+  <!-- Passenger Details -->
+  <section class="form-section hidden" id="detailsSection">
+    <div class="section-title">Passenger Info</div>
+    <label>Name</label>
+    <input type="text" id="custName" placeholder="Your full name" />
+    <label>Phone</label>
+    <input type="text" id="custPhone" placeholder="10-digit mobile number" />
+    <label>Email</label>
+    <input type="email" id="custEmail" placeholder="Your email" />
+    <button onclick="confirmBooking()">Confirm Booking</button>
+  </section>
+
+  <!-- Ticket Display -->
+  <section class="form-section hidden" id="ticketSection">
+    <div class="section-title">Your Ticket</div>
+    <p id="ticketContent"></p>
+
+    <button onclick="downloadTicket('bookingId')">Download E-Ticket</button>
+
+  </section>
+
+<script>
+  let buses = JSON.parse(localStorage.getItem("busify_buses") || "[]");
+  let bookings = JSON.parse(localStorage.getItem("busify_bookings") || "[]");
+
+  let selectedBus = null;
+  let selectedSeats = [];
+  let lastBookingId = null;
+
+  function showBuses() {
+    const from = document.getElementById('fromCity').value;
+    const to = document.getElementById('toCity').value;
+    const date = document.getElementById('travelDate').value;
+    const tbody = document.querySelector("#busSection tbody");
+    tbody.innerHTML = "";
+
+    if (!from || !to || from === to || !date) {
+      alert("Please select valid cities and date.");
+      return;
+    }
+
+    const matched = buses.filter(bus => bus.from === from && bus.to === to && bus.date === date);
+
+    if (matched.length === 0) {
+      tbody.innerHTML = "<tr><td colspan='5'>No buses found.</td></tr>";
+    } else {
+      matched.forEach((bus, i) => {
+        tbody.innerHTML += `
+          <tr>
+            <td>${bus.name}</td>
+            <td>${bus.time}</td>
+            <td>₹${bus.price}</td>
+            <td>${bus.seats}</td>
+            <td><button onclick="selectBus(${i})">Select</button></td>
+          </tr>`;
+      });
+    }
+
+    document.getElementById('busSection').classList.remove('hidden');
+  }
+
+  function selectBus(index) {
+    const from = document.getElementById('fromCity').value;
+    const to = document.getElementById('toCity').value;
+    const date = document.getElementById('travelDate').value;
+
+    const matched = buses.filter(bus => bus.from === from && bus.to === to && bus.date === date);
+    selectedBus = matched[index];
+    selectedSeats = [];
+
+    const seatGrid = document.getElementById('seatGrid');
+    seatGrid.innerHTML = '';
+
+    const totalSeats = Math.min(40, selectedBus.seats);
+    const layout = ['A', 'B', 'C', 'D'];
+
+    for (let i = 1; i <= totalSeats; i++) {
+      const seatId = layout[Math.floor((i - 1) / 4)] + ((i - 1) % 4 + 1);
+
+      const seatTaken = bookings.some(b => b.busNumber === selectedBus.number && b.date === selectedBus.date && b.seats.includes(seatId));
+
+      const div = document.createElement('div');
+      div.className = 'seat';
+      div.textContent = seatId;
+
+      if (seatTaken) {
+        div.classList.add('taken');
+        div.style.background = "#ccc";
+        div.style.pointerEvents = "none";
+      } else {
+        div.onclick = () => toggleSeat(seatId, div);
+      }
+
+      seatGrid.appendChild(div);
+    }
+
+    document.getElementById('seatSection').classList.remove('hidden');
+  }
+
+  function toggleSeat(seat, div) {
+    if (selectedSeats.includes(seat)) {
+      selectedSeats = selectedSeats.filter(s => s !== seat);
+      div.classList.remove('selected');
+    } else {
+      if (selectedSeats.length >= 5) {
+        alert("You can only select up to 5 seats.");
+        return;
+      }
+      selectedSeats.push(seat);
+      div.classList.add('selected');
+    }
+
+    document.getElementById('selectedSeats').value = selectedSeats.join(', ');
+    document.getElementById('detailsSection').classList.toggle('hidden', selectedSeats.length === 0);
+  }
+
+  function confirmBooking() {
+    const name = document.getElementById('custName').value;
+    const phone = document.getElementById('custPhone').value;
+    const email = document.getElementById('custEmail').value;
+    const date = document.getElementById('travelDate').value;
+
+    if (!name || !phone || !email || selectedSeats.length === 0) {
+      alert("Please complete all details and select seat(s)");
+      return;
+    }
+
+    const bookingId = "BKG" + Date.now();
+    const bookingData = {
+      id: bookingId,
+      busNumber: selectedBus.number,
+      busName: selectedBus.name,
+      from: selectedBus.from,
+      to: selectedBus.to,
+      date,
+      time: selectedBus.time,
+      price: selectedBus.price,
+      seats: selectedSeats,
+      passenger: { name, phone, email }
+    };
+
+    bookings.push(bookingData);
+    localStorage.setItem("busify_bookings", JSON.stringify(bookings));
+
+    lastBookingId = bookingId;
+
+    document.getElementById('ticketContent').innerHTML = `
+      🎫 Bus: ${selectedBus.name}<br>
+      🪑 Seat(s): ${selectedSeats.join(', ')}<br>
+      📅 Date: ${date}<br>
+      ⏰ Time: ${selectedBus.time}<br>
+      🧑 Passenger: ${name}`;
+    document.getElementById('ticketSection').classList.remove('hidden');
+
+    alert("Booking successful!");
+  }
+
+  function downloadTicket() {
+    if (!lastBookingId) {
+      alert("No ticket to download!");
+      return;
+    }
+
+    const booking = bookings.find(b => b.id === lastBookingId);
+    if (!booking) return alert("Ticket not found!");
+
+    const content = `
+      BUSIFY Ticket\n\n
+      Booking ID: ${booking.id}
+      Bus: ${booking.busName} (${booking.busNumber})
+      From: ${booking.from} To: ${booking.to}
+      Date: ${booking.date}
+      Time: ${booking.time}
+      Seats: ${booking.seats.join(", ")}
+      Passenger: ${booking.passenger.name}
+      Phone: ${booking.passenger.phone}
+      Email: ${booking.passenger.email}
+      Total: ₹${booking.seats.length * booking.price}
+    `;
+
+    const blob = new Blob([content], { type: "text/plain" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `BUSIFY_TICKET_${booking.id}.txt`;
+    link.click();
+    URL.revokeObjectURL(link.href);
+  }
+</script>
+
+</body>
+</html>

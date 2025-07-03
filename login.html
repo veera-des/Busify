@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login ‑ BUSIFY</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ────── PAGE BASE ────── */
+    body{
+      background:linear-gradient(135deg,#1f1f2e,#2c2c47);
+      font-family:'Poppins',sans-serif;
+      color:#fff;
+      display:flex;flex-direction:column;
+      align-items:center;justify-content:center;
+      height:100vh;
+    }
+    .logo{text-align:center;margin-bottom:20px}
+    .logo img{height:60px}
+    .logo h1{
+      background:linear-gradient(to right,#00c6ff,#007bff);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+      font-size:2.5rem;margin-top:0.5rem;
+    }
+    .form{
+      background:rgba(255,255,255,0.05);
+      padding:2rem;border-radius:12px;width:300px;
+      box-shadow:0 0 20px rgba(0,0,0,0.4);
+    }
+
+    /* ────── INPUT + BUTTON ────── */
+    input,select,button{
+      width:100%;margin-top:1rem;padding:0.75rem;
+      border-radius:8px;border:none;font-size:1rem;
+    }
+    input{background:rgba(255,255,255,0.1);color:#fff;}
+
+    button{
+      background:#00c6ff;color:#fff;font-weight:bold;cursor:pointer;
+      transition:background .25s;
+    }
+    button:hover{background:#007bff;}
+
+    /* ────── CUSTOM SELECT (fix blue bar) ────── */
+    select{
+      background:#2c2c47;          /* closed bg */
+      color:#fff;                  /* closed text */
+      border:2px solid #007bff;
+      appearance:none;-webkit-appearance:none;-moz-appearance:none;
+      background-image:url("data:image/svg+xml;utf8,<svg fill='white' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M4 6l4 4 4-4z'/></svg>");
+      background-repeat:no-repeat;
+      background-position:right 12px center;
+      background-size:12px;
+    }
+    select:focus{
+      outline:none;border-color:#00c6ff;
+      box-shadow:0 0 4px rgba(0,123,255,.6);
+    }
+    select option{background:#fff;color:#000;}   /* dropdown list */
+  </style>
+</head>
+<body>
+  <div class="logo">
+    <img src="logo (4).png" alt="BUSIFY Logo" />
+    <h1>BUSIFY</h1>
+  </div>
+
+  <div class="form">
+    <h2>Login</h2>
+    <input type="email" id="email" placeholder="Email" />
+    <input type="password" id="password" placeholder="Password" />
+    <select id="role">
+      <option value="">Select Role</option>
+      <option value="customer">Customer</option>
+      <option value="owner">Owner</option>
+    </select>
+    <button onclick="login()">Login</button>
+  </div>
+
+  <script>
+function login() {
+  const email = document.getElementById("email").value.trim().toLowerCase();
+  const password = document.getElementById("password").value.trim();
+  const role = document.getElementById("role").value;
+
+  if (!email || !password || !role) {
+    alert("Please fill all fields, including role.");
+    return;
+  }
+
+  // Retrieve users from localStorage
+  const users = JSON.parse(localStorage.getItem("busify_users") || "[]");
+
+  // Find user matching credentials
+  const user = users.find(u => u.email === email && u.password === password && u.role === role);
+
+  if (user) {
+    // Save session to localStorage
+    localStorage.setItem("busify_loggedin_user", JSON.stringify(user));
+    
+    // Redirect based on role
+    window.location.href = role === "customer" ? "customer.html" : "owner.html";
+  } else {
+    alert("Login failed: Invalid credentials or role mismatch.");
+  }
+}
+  </script>
+</body>
+</html>

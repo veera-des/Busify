@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Welcome to BUSIFY</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <!-- Google Font: Poppins -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
+
+  <!-- Optional external style.css -->
+  <link rel="stylesheet" href="style.css" />
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      background: linear-gradient(to right, #1f1f2e, #2c2c47);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Poppins', sans-serif;
+      color: white;
+    }
+
+    .container {
+      text-align: center;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    .logo {
+      height: 125px;
+      margin-bottom: 3 rem;
+    }
+
+    h1 {
+      font-size: 3rem;
+      background: linear-gradient(to right, #00c6ff, #007bff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      font-size: 1.2rem;
+      color: #ccc;
+      margin-bottom: 2rem;
+    }
+
+    .btn {
+      padding: 0.75rem 2rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      margin: 1rem;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+
+    .login-btn {
+      background: #00c6ff;
+      color: white;
+    }
+
+    .signup-btn {
+      background: #007bff;
+      color: white;
+    }
+
+    .btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 10px rgba(0, 198, 255, 0.5);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 480px) {
+      h1 { font-size: 2rem; }
+      .btn { width: 100%; margin: 0.5rem 0; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <img src="logo (4).png" alt="BUSIFY Logo" class="logo" onerror="this.style.display='none'" />
+    <h1>BUSIFY</h1>
+    <p>Your Smart Bus Ticket Booking System</p>
+    <div>
+      <button class="btn login-btn" onclick="location.href='login.html'">Login</button>
+      <button class="btn signup-btn" onclick="location.href='signup.html'">Signup</button>
+    </div>
+  </div>
+</body>
+</html>
