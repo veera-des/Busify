@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Owner Dashboard – BUSIFY</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
+  <title>Owner Dashboard - BUSIFY</title>
+  <link rel="stylesheet" href="style.css" />
   <style>
     /* ───────── PAGE BASE ───────── */
     body{
@@ -31,10 +31,10 @@
       color:#fff;font-size:1rem;
     }
     select{
-      background:#2c2c47;
+      background-color:#2c2c47;
       background-image:url("data:image/svg+xml;utf8,<svg fill='white' viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'><path d='M4 6l4 4 4-4z'/></svg>");
       background-repeat:no-repeat;background-position:right 12px center;
-      background-size:12px;appearance:none;
+      background-size:12px;appearance:none;-webkit-appearance:none;-moz-appearance:none;
     }
     select:focus{outline:none;border-color:#00c6ff;box-shadow:0 0 4px rgba(0,198,255,.6)}
     select option{background:#fff;color:#000}
@@ -60,14 +60,12 @@
     <h1 class="brand-title">BUSIFY</h1>
   </div>
 
-  <!-- ────── Add / Update Form ────── -->
   <div class="section">
     <h2>Add a Bus</h2>
     <label>Bus Name</label>
     <input type="text" id="busName" />
     <label>From City</label>
     <select id="fromCity">
-      <!-- same city list as before -->
       <option value="">Select</option>
       <option>Chennai</option><option>Coimbatore</option><option>Madurai</option><option>Trichy</option>
       <option>Salem</option><option>Tirunelveli</option><option>Erode</option><option>Vellore</option>
@@ -77,7 +75,6 @@
     </select>
     <label>To City</label>
     <select id="toCity">
-      <!-- same list -->
       <option value="">Select</option>
       <option>Chennai</option><option>Coimbatore</option><option>Madurai</option><option>Trichy</option>
       <option>Salem</option><option>Tirunelveli</option><option>Erode</option><option>Vellore</option>
@@ -94,7 +91,6 @@
     <button id="addBtn" onclick="addBus()">Add Bus</button>
   </div>
 
-  <!-- ────── Table ────── -->
   <div class="section">
     <h2>Manage Buses</h2>
     <table>
@@ -108,99 +104,101 @@
   </div>
 
   <script>
-    /* ───────── LocalStorage Helpers ───────── */
-    function loadBuses(){
-      return JSON.parse(localStorage.getItem("busifyBuses") || "[]");
-    }
-    function saveBuses(list){
-      localStorage.setItem("busifyBuses", JSON.stringify(list));
-    }
+  /* ───────── State ───────── */
+  let buses = JSON.parse(localStorage.getItem("busify_buses") || "[]");
+  let editingId = null;
+  const addBtn = document.getElementById('addBtn');
 
-    /* ───────── State ───────── */
-    let buses      = loadBuses();
-    let editingId  = null;
-    const addBtn   = document.getElementById("addBtn");
+  /* ───────── Fetch & Render ───────── */
+  function fetchBuses() {
+    buses = JSON.parse(localStorage.getItem("busify_buses") || "[]");
+    renderBusTable();
+  }
 
-    /* ───────── Render ───────── */
-    function renderBusTable(){
-      buses = loadBuses();                              // refresh from LS
-      const tbody = document.getElementById("busList");
-      tbody.innerHTML = "";
-      buses.forEach(bus=>{
-        tbody.innerHTML += `
-          <tr>
-            <td>${bus.name}</td><td>${bus.from}</td><td>${bus.to}</td>
-            <td>${bus.time}</td><td>₹${bus.fare}</td><td>${bus.seats}</td>
-            <td class="actions">
-              <button onclick="startEdit('${bus.id}')">Edit</button>
-              <button onclick="deleteBus('${bus.id}')">Delete</button>
-            </td>
-          </tr>`;
-      });
-    }
+  function renderBusTable() {
+    const tbody = document.getElementById('busList');
+    tbody.innerHTML = "";
+    buses.forEach((bus, index) => {
+      tbody.innerHTML += `
+        <tr>
+          <td>${bus.name}</td><td>${bus.from}</td><td>${bus.to}</td>
+          <td>${bus.time}</td><td>₹${bus.fare}</td><td>${bus.seats}</td>
+          <td class="actions">
+            <button onclick="startEdit(${index})">Edit</button>
+            <button onclick="deleteBus(${index})">Delete</button>
+          </td>
+        </tr>`;
+    });
+  }
 
-    /* ───────── Form Helpers ───────── */
-    function startEdit(id){
-      const bus = buses.find(b=>b.id===id);
-      if(!bus) return;
-      document.getElementById("busName").value  = bus.name;
-      document.getElementById("fromCity").value = bus.from;
-      document.getElementById("toCity").value   = bus.to;
-      document.getElementById("busTime").value  = bus.time;
-      document.getElementById("busFare").value  = bus.fare;
-      document.getElementById("busSeats").value = bus.seats;
-      editingId = id;
-      addBtn.textContent = "Update Bus";
-    }
-    function resetForm(){
-      ["busName","fromCity","toCity","busTime","busFare","busSeats"]
-        .forEach(id => document.getElementById(id).value = "");
-      editingId = null;
-      addBtn.textContent = "Add Bus";
-    }
+  /* ───────── Form Helpers ───────── */
+  function startEdit(index){
+    const bus = buses[index];
+    if(!bus) return;
 
-    /* ───────── Add / Update Bus ───────── */
-    function addBus(){
-      const bus = {
-        name : document.getElementById("busName").value.trim(),
-        from : document.getElementById("fromCity").value,
-        to   : document.getElementById("toCity").value,
-        time : document.getElementById("busTime").value,
-        fare : document.getElementById("busFare").value,
-        seats: document.getElementById("busSeats").value
-      };
-      if(!bus.name||!bus.from||!bus.to||!bus.time||!bus.fare||!bus.seats){
-        return alert("Please fill in all fields.");
-      }
+    document.getElementById('busName').value  = bus.name;
+    document.getElementById('fromCity').value = bus.from;
+    document.getElementById('toCity').value   = bus.to;
+    document.getElementById('busTime').value  = bus.time;
+    document.getElementById('busFare').value  = bus.fare;
+    document.getElementById('busSeats').value = bus.seats;
 
-      let list = loadBuses();
+    editingId = index;
+    addBtn.textContent = "Update Bus";
+  }
 
-      if(editingId){
-        // UPDATE
-        list = list.map(b => b.id === editingId ? { ...bus, id: editingId } : b);
-        alert("Bus updated!");
-      }else{
-        // ADD
-        bus.id = "bus_" + Date.now();
-        list.push(bus);
-        alert("Bus added!");
-      }
-      saveBuses(list);
-      resetForm();
-      renderBusTable();
+  function resetForm(){
+    document.getElementById('busName').value  =
+    document.getElementById('fromCity').value =
+    document.getElementById('toCity').value   =
+    document.getElementById('busTime').value  =
+    document.getElementById('busFare').value  =
+    document.getElementById('busSeats').value = "";
+    editingId = null;
+    addBtn.textContent = "Add Bus";
+  }
+
+  /* ───────── Add / Update Bus ───────── */
+  function addBus(){
+    const bus = {
+      name : document.getElementById('busName').value,
+      from : document.getElementById('fromCity').value,
+      to   : document.getElementById('toCity').value,
+      time : document.getElementById('busTime').value,
+      fare : document.getElementById('busFare').value,
+      seats: document.getElementById('busSeats').value
+    };
+
+    if (!bus.name || !bus.from || !bus.to || !bus.time || !bus.fare || !bus.seats) {
+      return alert("Please fill in all fields.");
     }
 
-    /* ───────── Delete Bus ───────── */
-    function deleteBus(id){
-      if(!confirm("Delete this bus?")) return;
-      const list = loadBuses().filter(b => b.id !== id);
-      saveBuses(list);
-      renderBusTable();
-      resetForm();
-      alert("Bus deleted");
+    if (editingId !== null) {
+      // Update existing bus
+      buses[editingId] = bus;
+      alert("Bus updated!");
+    } else {
+      // Add new bus
+      buses.push(bus);
+      alert("Bus added!");
     }
 
-    window.onload = renderBusTable;
-  </script>
+    localStorage.setItem("busify_buses", JSON.stringify(buses));
+    fetchBuses();
+    resetForm();
+  }
+
+  /* ───────── Delete Bus ───────── */
+  function deleteBus(index){
+    if (!confirm("Delete this bus?")) return;
+    buses.splice(index, 1);
+    localStorage.setItem("busify_buses", JSON.stringify(buses));
+    alert("Bus deleted");
+    fetchBuses();
+    resetForm();
+  }
+
+  window.onload = fetchBuses;
+</script>
 </body>
 </html>
